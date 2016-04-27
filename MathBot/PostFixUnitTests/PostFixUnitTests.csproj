@@ -53,6 +53,12 @@
     <Compile Include="PostfixTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PostFix\PostFix.csproj">
+      <Project>{31aa1494-0e32-4f7b-b478-94db892f34b1}</Project>
+      <Name>PostFix</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
