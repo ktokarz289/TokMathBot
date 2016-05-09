@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,13 +75,15 @@ namespace PostFix
 	public class PostfixConverter
 	{
 		private string infixNotation;
-		private string postfixNotation;
+		private List<string> postfixNotation;
+		private string operand;
 		public OperatorPriority op;
 
 		public PostfixConverter(string infix)
 		{
 			infixNotation = infix;
 			op = new OperatorPriority();
+			postfixNotation = new List<string>();
 		}
 
 		public void Converter()
@@ -91,17 +93,25 @@ namespace PostFix
 			{
 				if (CheckIfOperand(c.ToString()))
 				{
-					postfixNotation += c;
+					operand += c;
 				}
 				else if (operators.Count == 0)
 				{
 					operators.Push(c);
+					postfixNotation.Add(operand);
+					operand = "";
 				}
 				else
 				{
+					if(operand != "")
+						postfixNotation.Add(operand);
+					operand = "";
 					HandleStackOperators(c, ref operators);
 				}
 			}
+
+			if (operand != "")
+				postfixNotation.Add(operand);
 
 			while (operators.Count > 0)
 				PopThroughStack(ref operators);
@@ -131,7 +141,7 @@ namespace PostFix
 				string character = operators.Pop().ToString();
 				if (character != "(" && character != ")")
 				{
-					postfixNotation += character;
+					postfixNotation.Add(character);
 					while (operators.Count > 0 && !OperatorGreaterThanTopOfStack(currOperator, (char)operators.Peek()))
 					{
 						PopThroughStack(ref operators);
@@ -144,7 +154,7 @@ namespace PostFix
 						PopThroughStack(ref operators);
 					}
 					while (operators.Peek().ToString() != "(");
-					operators.Pop();
+						operators.Pop();
 				}
 
 				operators.Push(currOperator);
@@ -156,7 +166,7 @@ namespace PostFix
 			string character = operators.Pop().ToString();
 			if (character != "(" && character != ")")
 			{
-				postfixNotation += character;
+				postfixNotation.Add(character);
 			}
 		}
 
@@ -172,13 +182,13 @@ namespace PostFix
 			return success;
 		}
 
-		public string ConvertAndReturn()
+		public List<string> ConvertAndReturn()
 		{
 			Converter();
 			return postfixNotation;
 		}
-		 
-		public string ReturnPostfix()
+
+		public List<string> ReturnPostfix()
 		{
 			return postfixNotation;
 		}
